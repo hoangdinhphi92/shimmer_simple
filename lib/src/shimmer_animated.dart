@@ -40,16 +40,17 @@ class _ShimmerAnimatedState extends State<ShimmerAnimated> {
 
   @override
   Widget build(BuildContext context) {
+    final renderBox = context.findRenderObject() as RenderBox?;
     // Collect ancestor shimmer info.
     final shimmer = ShimmerContainer.of(context)!;
-    if (!shimmer.isSized) {
+    if (!shimmer.isSized || renderBox == null) {
       // The ancestor Shimmer widget has not laid
       // itself out yet. Return an empty box.
-      return const SizedBox();
+      return const SizedBox.shrink();
     }
     final gradient = shimmer.gradient;
     final shaderRectWithinShimmer = shimmer.getDescendantShaderRect(
-      descendant: context.findRenderObject() as RenderBox,
+      descendant: renderBox,
     );
 
     return ShaderMask(
